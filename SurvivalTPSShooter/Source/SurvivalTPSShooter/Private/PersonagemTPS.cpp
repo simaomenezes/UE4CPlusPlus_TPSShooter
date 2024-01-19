@@ -2,6 +2,7 @@
 
 
 #include "PersonagemTPS.h"
+#include "Components/InputComponent.h"
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -18,6 +19,16 @@ void APersonagemTPS::BeginPlay()
 	
 }
 
+void APersonagemTPS::MoveForward(float Value)
+{
+	AddMovementInput(GetActorForwardVector() * Value);
+}
+
+void APersonagemTPS::MoveRigth(float Value)
+{
+	AddMovementInput(GetActorRightVector() * Value);
+}
+
 // Called every frame
 void APersonagemTPS::Tick(float DeltaTime)
 {
@@ -29,6 +40,8 @@ void APersonagemTPS::Tick(float DeltaTime)
 void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAxis("MoveForward", this, &APersonagemTPS::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRigth", this, &APersonagemTPS::MoveRigth);
 
 }
 
