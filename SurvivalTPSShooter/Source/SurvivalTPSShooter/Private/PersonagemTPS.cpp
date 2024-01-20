@@ -23,6 +23,8 @@ APersonagemTPS::APersonagemTPS()
 	SpringArmCamera->TargetArmLength = 200.f;
 	SpringArmCamera->bUsePawnControlRotation = true;
 	SpringArmCamera->AddRelativeLocation(FVector(0.f, 40.f, 50.f));
+	SpringArmCamera->bEnableCameraLag = true;
+	SpringArmCamera->CameraLagSpeed = 40.f;
 	SpringArmCamera->SetupAttachment(RootComponent);
 
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(FName("CameraPlayer"));
@@ -33,6 +35,7 @@ APersonagemTPS::APersonagemTPS()
 	GetCharacterMovement()->AirControl = 0.05f;
 	GetCharacterMovement()->JumpZVelocity = 425.f;
 	GetCharacterMovement()->GravityScale = 1.5f;
+	GetCharacterMovement()->CrouchedHalfHeight = 70.f;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
