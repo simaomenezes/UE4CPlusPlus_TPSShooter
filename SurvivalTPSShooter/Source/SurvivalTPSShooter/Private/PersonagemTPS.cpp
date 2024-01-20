@@ -6,6 +6,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
+
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -23,6 +26,10 @@ APersonagemTPS::APersonagemTPS()
 	PlayerCamera->SetupAttachment(SpringArmCamera);
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	GetCharacterMovement()->AirControl = 0.05f;
+	GetCharacterMovement()->JumpZVelocity = 425.f;
+	GetCharacterMovement()->GravityScale = 1.5f;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -42,6 +49,18 @@ void APersonagemTPS::MoveForward(float Value)
 void APersonagemTPS::MoveRigth(float Value)
 {
 	AddMovementInput(GetActorRightVector() * Value);
+}
+
+void APersonagemTPS::Jump()
+{
+	printf("pula");
+	bIsJump = true;
+}
+
+void APersonagemTPS::JumpStop()
+{
+	printf("nao pula");
+	bIsJump = false;
 }
 
 void APersonagemTPS::PlayerCrouch()
@@ -75,6 +94,9 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("PlayerCrouch", EInputEvent::IE_Pressed, this, &APersonagemTPS::PlayerCrouch);
 	PlayerInputComponent->BindAction("PlayerCrouch", EInputEvent::IE_Released, this, &APersonagemTPS::PlayerUncrouch);
+
+	PlayerInputComponent->BindAction("PlayerJump", EInputEvent::IE_Pressed, this, &APersonagemTPS::Jump);
+	PlayerInputComponent->BindAction("PlayerJump", EInputEvent::IE_Released, this, &APersonagemTPS::JumpStop);
 
 }
 

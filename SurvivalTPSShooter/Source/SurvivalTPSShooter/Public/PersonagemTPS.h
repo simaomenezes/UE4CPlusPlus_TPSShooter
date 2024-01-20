@@ -29,6 +29,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmCamera;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Jump")
+	bool bIsJump;
+
+	void Jump();
+	void JumpStop();
+
 	//Crouch
 	void PlayerCrouch();
 	//UnCrouch
