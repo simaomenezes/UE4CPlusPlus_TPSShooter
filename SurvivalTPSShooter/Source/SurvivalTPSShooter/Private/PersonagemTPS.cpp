@@ -8,6 +8,9 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Engine/World.h"
+#include "Weapon.h"
+#include "Engine/EngineTypes.h"
 
 
 // Sets default values
@@ -38,6 +41,11 @@ APersonagemTPS::APersonagemTPS()
 void APersonagemTPS::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FActorSpawnParameters Parameters;
+	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AWeapon* WeaponPlayer = GetWorld()->SpawnActor<AWeapon>(BP_WeaponRifle, FTransform(), Parameters);
+	WeaponPlayer->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("SocketOfWeapon"));
 	
 }
 
