@@ -43,5 +43,10 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveForward", this, &APersonagemTPS::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRigth", this, &APersonagemTPS::MoveRigth);
 
+	//Move to Axis Y
+	PlayerInputComponent->BindAxis("LookUpAndDow", this, &APersonagemTPS::AddControllerPitchInput);
+	//Move to Axis X
+	PlayerInputComponent->BindAxis("LookRigthAndLeft", this, &APersonagemTPS::AddControllerYawInput);
+
 }
 
