@@ -29,6 +29,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmCamera;
 
+	//Crouch
+	void PlayerCrouch();
+	//UnCrouch
+	void PlayerUncrouch();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

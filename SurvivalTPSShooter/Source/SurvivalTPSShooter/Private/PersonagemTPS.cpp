@@ -5,6 +5,7 @@
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -20,6 +21,8 @@ APersonagemTPS::APersonagemTPS()
 
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(FName("CameraPlayer"));
 	PlayerCamera->SetupAttachment(SpringArmCamera);
+
+	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -41,6 +44,16 @@ void APersonagemTPS::MoveRigth(float Value)
 	AddMovementInput(GetActorRightVector() * Value);
 }
 
+void APersonagemTPS::PlayerCrouch()
+{
+	Crouch();
+}
+
+void APersonagemTPS::PlayerUncrouch()
+{
+	UnCrouch();
+}
+
 // Called every frame
 void APersonagemTPS::Tick(float DeltaTime)
 {
@@ -59,6 +72,9 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpAndDow", this, &APersonagemTPS::AddControllerPitchInput);
 	//Move to Axis X
 	PlayerInputComponent->BindAxis("LookRigthAndLeft", this, &APersonagemTPS::AddControllerYawInput);
+
+	PlayerInputComponent->BindAction("PlayerCrouch", EInputEvent::IE_Pressed, this, &APersonagemTPS::PlayerCrouch);
+	PlayerInputComponent->BindAction("PlayerCrouch", EInputEvent::IE_Released, this, &APersonagemTPS::PlayerUncrouch);
 
 }
 
