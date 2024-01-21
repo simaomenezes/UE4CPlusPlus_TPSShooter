@@ -4,10 +4,13 @@
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/EngineTypes.h"
 #include "CollisionQueryParams.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/SkeletalMesh.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -16,10 +19,20 @@ AWeapon::AWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
 	MeshWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MeshWeapon"));
-	RootComponent = MeshWeapon;
 
+
+	ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshOfWeapon(TEXT("SkeletalMesh'/Game/Weapons/Rifle.Rifle'"));
+	if (MeshOfWeapon.Succeeded())
+	{
+		MeshWeapon->SetSkeletalMesh(MeshOfWeapon.Object);
+	}
+
+	RootComponent = MeshWeapon;
 	ArrowWeapon = CreateDefaultSubobject<UArrowComponent>(FName("ArrowGunBarrel"));
-	ArrowWeapon->AttachToComponent(MeshWeapon, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("MuzzleFlashSocket"));
+	ArrowWeapon->SetupAttachment(MeshWeapon, FName("MuzzleFlashSocket"));
+	
+	// ArrowWeapon->AttachToComponent(MeshWeapon, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("MuzzleFlashSocket"));
+	
 	ArrowWeapon->SetRelativeLocation(FVector(1.5f, 0.f, -1.2f));
 	ArrowWeapon->SetRelativeScale3D(FVector(0.3f, 0.8f, 0.7f));
 
@@ -42,8 +55,8 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::Shoot()
 {
-	UArrowComponent* UArrowWeapon = FindComponentByClass<UArrowComponent>();
-	if (UArrowWeapon != nullptr)
+	ArrowWeapon = FindComponentByClass<UArrowComponent>();
+	if (ArrowWeapon != nullptr)
 	{
 		/*
 		* Seta da arma é um componente do ator logo achar sua localização
@@ -51,8 +64,8 @@ void AWeapon::Shoot()
 		* Se fosse a Arma seria GetActorLocation() pois é a arma é o actor que
 		* possui um arrow(setadaarma) como component
 		*/
-		FVector ArrowBegin = UArrowWeapon->GetComponentLocation();
-		FVector ArrowDirection = UArrowWeapon->GetComponentRotation().Vector();
+		FVector ArrowBegin = ArrowWeapon->GetComponentLocation();
+		FVector ArrowDirection = ArrowWeapon->GetComponentRotation().Vector();
 		FVector ArrowEnd = ArrowBegin + (ArrowDirection * 1000);
 
 		/*

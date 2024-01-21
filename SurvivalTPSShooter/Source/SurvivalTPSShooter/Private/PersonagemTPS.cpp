@@ -11,6 +11,10 @@
 #include "Engine/World.h"
 #include "Weapon.h"
 #include "Engine/EngineTypes.h"
+#include "Engine/Engine.h"
+#include "Components/ArrowComponent.h"
+#include "Components/SceneComponent.h"
+#include "WorldCollision.h"
 
 
 // Sets default values
@@ -47,9 +51,8 @@ void APersonagemTPS::BeginPlay()
 
 	FActorSpawnParameters Parameters;
 	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	AWeapon* WeaponPlayer = GetWorld()->SpawnActor<AWeapon>(BP_WeaponRifle, FTransform(), Parameters);
-	WeaponPlayer->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("SocketOfWeapon"));
-	
+	WeaponPlayer = GetWorld()->SpawnActor<AWeapon>(BP_WeaponRifle, FTransform(), Parameters);
+	WeaponPlayer->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("SocketOfWeapon"));
 }
 
 void APersonagemTPS::MoveForward(float Value)
@@ -84,6 +87,11 @@ void APersonagemTPS::PlayerUncrouch()
 	UnCrouch();
 }
 
+void APersonagemTPS::Shoot()
+{
+	WeaponPlayer->Shoot();
+}
+
 // Called every frame
 void APersonagemTPS::Tick(float DeltaTime)
 {
@@ -108,6 +116,10 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("PlayerJump", EInputEvent::IE_Pressed, this, &APersonagemTPS::Jump);
 	PlayerInputComponent->BindAction("PlayerJump", EInputEvent::IE_Released, this, &APersonagemTPS::JumpStop);
+
+	PlayerInputComponent->BindAction("PlayerShoot", EInputEvent::IE_Pressed, this, &APersonagemTPS::Shoot);
+	PlayerInputComponent->BindAction("PlayerShoot", EInputEvent::IE_Released, this, &APersonagemTPS::Shoot);
+
 
 }
 

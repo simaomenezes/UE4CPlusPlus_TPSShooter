@@ -26,7 +26,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class USkeletalMeshComponent* MeshWeapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintreadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class UArrowComponent* ArrowWeapon;
 
 public:	
