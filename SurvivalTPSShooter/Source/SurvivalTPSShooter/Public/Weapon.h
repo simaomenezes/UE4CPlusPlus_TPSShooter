@@ -19,14 +19,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+	/*
+	* meta = (AllowPrivateAcess = "true") Indica que esta propriedade ou 
+	* atributo ou variavel do objeto estará acessivel para acesso na Blueprint,
+	*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class USkeletalMeshComponent* MeshWeapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintreadWrite, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintreadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class UArrowComponent* ArrowWeapon;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void Shoot();
 
 };

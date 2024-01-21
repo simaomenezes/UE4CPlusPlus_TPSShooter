@@ -5,6 +5,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Engine/EngineTypes.h"
+#include "CollisionQueryParams.h"
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -35,5 +38,41 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AWeapon::Shoot()
+{
+	UArrowComponent* UArrowWeapon = FindComponentByClass<UArrowComponent>();
+	if (UArrowWeapon != nullptr)
+	{
+		/*
+		* Seta da arma é um componente do ator logo achar sua localização
+		* utilizamos GetComponentLocation.
+		* Se fosse a Arma seria GetActorLocation() pois é a arma é o actor que
+		* possui um arrow(setadaarma) como component
+		*/
+		FVector ArrowBegin = UArrowWeapon->GetComponentLocation();
+		FVector ArrowDirection = UArrowWeapon->GetComponentRotation().Vector();
+		FVector ArrowEnd = ArrowBegin + (ArrowDirection * 1000);
+
+		/*
+		* O raio de raycast vai pecorrer até o fim
+		* e precisa colocar as informações de HIT(impacto) em algum estrutura. Esta estrutura é 
+		* a FHitResult
+		*/
+		FHitResult HitInfo;
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+		Params.AddIgnoredActor(GetOwner());
+		Params.bTraceComplex = true;
+
+		bool HitSome = GetWorld()->LineTraceSingleByChannel(HitInfo, ArrowBegin, ArrowEnd, ECollisionChannel::ECC_Visibility, Params);
+		if (HitSome)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit Some"));
+		}
+		DrawDebugLine(GetWorld(), ArrowBegin, ArrowEnd, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
+
+	}
 }
 
