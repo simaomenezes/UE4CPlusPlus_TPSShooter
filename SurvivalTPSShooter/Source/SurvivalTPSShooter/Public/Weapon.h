@@ -18,8 +18,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
 	class USkeletalMeshComponent* MeshWeapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintreadWrite, Category = "Weapon")
+	class UArrowComponent* ArrowWeapon;
 
 public:	
 	// Called every frame
