@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class UArrowComponent* ArrowWeapon;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	class USoundBase* SoundShoot;
+
 	UPROPERTY(EditAnywhere, Category = "EffectsOfWeapon")
 	class UParticleSystem* EffectsMuzzle;
 

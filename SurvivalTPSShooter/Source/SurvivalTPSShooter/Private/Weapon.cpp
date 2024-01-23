@@ -16,6 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/SkeletalMeshActor.h"
 #include "Materials/MaterialInterface.h"
+#include "Sound/SoundBase.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -27,6 +28,7 @@ AWeapon::AWeapon()
 	EffectsImpactsOfBlood = nullptr;
 	EffectsImpactsOfGeneral = nullptr;
 	DecalImpactGeneral = nullptr;
+	SoundShoot = nullptr;
 
 	MeshWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MeshWeapon"));
 
@@ -91,6 +93,12 @@ void AWeapon::Shoot()
 		float lifeSpan = 60.f;
 
 		bool HitSome = GetWorld()->LineTraceSingleByChannel(HitInfo, ArrowBegin, ArrowEnd, ECollisionChannel::ECC_Visibility, Params);
+
+		if (SoundShoot)
+		{
+			UGameplayStatics::PlaySoundAtLocation(ArrowWeapon, SoundShoot, ArrowBegin);
+		}
+
 		if (HitSome)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Hit Some"));
