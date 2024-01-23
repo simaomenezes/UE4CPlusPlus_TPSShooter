@@ -4,19 +4,29 @@
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Engine/EngineTypes.h"
+#include "Engine/World.h"
 #include "CollisionQueryParams.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/UObjectBase.h"
 #include "Engine/SkeletalMesh.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/GameplayStatics.h"
+#include "Animation/SkeletalMeshActor.h"
+#include "Materials/MaterialInterface.h"
 
 // Sets default values
 AWeapon::AWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	EffectsMuzzle = nullptr;
+	EffectsImpactsOfBlood = nullptr;
+	EffectsImpactsOfGeneral = nullptr;
+	DecalImpactGeneral = nullptr;
 
 	MeshWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MeshWeapon"));
 
@@ -78,13 +88,41 @@ void AWeapon::Shoot()
 		Params.AddIgnoredActor(this);
 		Params.AddIgnoredActor(GetOwner());
 		Params.bTraceComplex = true;
+		float lifeSpan = 60.f;
 
 		bool HitSome = GetWorld()->LineTraceSingleByChannel(HitInfo, ArrowBegin, ArrowEnd, ECollisionChannel::ECC_Visibility, Params);
 		if (HitSome)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Hit Some"));
+			AActor* Actor = HitInfo.GetActor();
+
+			FVector Location = ArrowWeapon->GetComponentLocation();
+			FRotator Rotation = ArrowWeapon->GetComponentRotation();
+
+			FVector Scale = FVector(0.9f);
+
+			if (Actor->GetClass()->IsChildOf(ASkeletalMeshActor::StaticClass()) && EffectsImpactsOfBlood)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EffectsImpactsOfBlood, HitInfo.Location, HitInfo.ImpactNormal.Rotation(), Scale, true);
+			}
+			else if (EffectsImpactsOfGeneral)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EffectsImpactsOfGeneral, HitInfo.Location, HitInfo.ImpactNormal.Rotation(), Scale, true);
+
+				FVector DecalSize = FVector(FMath::RandRange(10.f, 50.f));
+				UGameplayStatics::SpawnDecalAttached(DecalImpactGeneral, DecalSize, HitInfo.GetComponent(), NAME_None, HitInfo.Location, HitInfo.ImpactNormal.Rotation(), EAttachLocation::KeepWorldPosition, lifeSpan);
+			}
 		}
 		DrawDebugLine(GetWorld(), ArrowBegin, ArrowEnd, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
+
+		if (EffectsMuzzle)
+		{
+			FVector Location = ArrowWeapon->GetComponentLocation();
+			FRotator Rotation = ArrowWeapon->GetComponentRotation();
+
+			FVector Scale = FVector(0.9f);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EffectsMuzzle, Location, Rotation, Scale, true);
+		}
 
 	}
 }

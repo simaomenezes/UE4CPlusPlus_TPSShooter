@@ -29,6 +29,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAcess = "true"))
 	class UArrowComponent* ArrowWeapon;
 
+	UPROPERTY(EditAnywhere, Category = "EffectsOfWeapon")
+	class UParticleSystem* EffectsMuzzle;
+
+	UPROPERTY(EditAnywhere, Category = "EffectsOfImpacts")
+	class UParticleSystem* EffectsImpactsOfBlood;
+
+	UPROPERTY(EditAnywhere, Category = "EffectsOfImpacts")
+	class UParticleSystem* EffectsImpactsOfGeneral;
+
+	UPROPERTY(EditAnywhere, Category = "EffectsOfImpacts")
+	class UMaterialInterface* DecalImpactGeneral;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
