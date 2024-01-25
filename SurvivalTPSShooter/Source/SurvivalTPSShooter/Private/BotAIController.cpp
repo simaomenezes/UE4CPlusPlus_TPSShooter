@@ -7,6 +7,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Pawn.h"
 #include "BotCharacter.h"
+#include "Engine/Engine.h"
+#include "Weapon.h"
 
 ABotAIController::ABotAIController()
 {
@@ -23,7 +25,7 @@ ABotAIController::ABotAIController()
 
 void ABotAIController::OnPossess(APawn* InPawn)
 {
-	Super::Possess(InPawn);
+	Super::OnPossess(InPawn);
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &ABotAIController::OnSeePawn);
 
 	if (BehaviorTree)
@@ -38,7 +40,12 @@ void ABotAIController::OnSeePawn(APawn* SensedPawn)
 {
 	if (BlackboardComp && SensedPawn)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("I see you!"));
+
 		BlackboardComp->SetValueAsObject("Enemy", SensedPawn);
 		BlackboardComp->SetValueAsBool("Patrol", false);
+
+		ABotCharacter* Bot = Cast<ABotCharacter>(GetPawn());
+		Bot->WeaponEnemy->Shoot();
 	}
 }

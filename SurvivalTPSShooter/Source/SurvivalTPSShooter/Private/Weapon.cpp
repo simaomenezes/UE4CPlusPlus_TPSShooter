@@ -121,7 +121,7 @@ void AWeapon::Shoot()
 				UGameplayStatics::SpawnDecalAttached(DecalImpactGeneral, DecalSize, HitInfo.GetComponent(), NAME_None, HitInfo.Location, HitInfo.ImpactNormal.Rotation(), EAttachLocation::KeepWorldPosition, lifeSpan);
 			}
 		}
-		DrawDebugLine(GetWorld(), ArrowBegin, ArrowEnd, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
+		//DrawDebugLine(GetWorld(), ArrowBegin, ArrowEnd, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
 
 		if (EffectsMuzzle)
 		{

@@ -19,16 +19,16 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
-	UPROPERTY(EditDefaultOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UPawnSensingComponent* PawnSensingComp;
 
-	UPROPERTY(EditDefaultOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBehaviorTree* BehaviorTree;
 
-	UPROPERTY(EditDefaultOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBehaviorTreeComponent* BehaviorTreeComp;
 
-	UPROPERTY(EditDefaultOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBlackboardComponent* BlackboardComp;
 
 	UFUNCTION()
